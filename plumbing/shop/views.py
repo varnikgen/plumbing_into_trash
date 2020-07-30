@@ -1,18 +1,17 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 
 from .models import Product
 
 
-class ProductsView(View):
+class ProductsView(ListView):
     """Список товаров"""
-    def get(self, request):
-        product = Product.objects.filter(available=True)
-        return render(request, "shop/products.html", {"product_list": product})
+    model = Product
+    queryset = Product.objects.filter(available=True)
 
 
-class ProductDetailView(View):
+class ProductDetailView(DetailView):
     """Полное описание товара"""
-    def get(self, request, slug):
-        product = Product.objects.get(url=slug)
-        return render(request, "shop/product_detail.html", {"product": product})
+    model = Product
+    slug_field = "url"
